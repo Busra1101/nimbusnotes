@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nimbusnotes-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nimbusnotes
+  template:
+    metadata:
+      labels:
+        app: nimbusnotes
+    spec:
+      containers:
+        - name: nimbusnotes
+          image: europe-west1-docker.pkg.dev/nimbusnotes-busra-2026/nimbusnotes-repo/nimbusnotes:v1
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: /data
+              name: nimbusnotes-storage
+      volumes:
+        - name: nimbusnotes-storage
+          persistentVolumeClaim:
+            claimName: nimbusnotes-pvc

@@ -1,0 +1,15 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'europe-west1-docker.pkg.dev/nimbusnotes-busra-2026/nimbusnotes-repo/nimbusnotes:latest'
+      - './app'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'europe-west1-docker.pkg.dev/nimbusnotes-busra-2026/nimbusnotes-repo/nimbusnotes:latest'
+
+images:
+  - 'europe-west1-docker.pkg.dev/nimbusnotes-busra-2026/nimbusnotes-repo/nimbusnotes:latest'
