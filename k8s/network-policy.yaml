@@ -9,8 +9,4 @@ spec:
   policyTypes:
     - Ingress
   ingress:
-    - from:
-        - namespaceSelector: {}
-      ports:
-        - protocol: TCP
-          port: 8080
+    - {}
