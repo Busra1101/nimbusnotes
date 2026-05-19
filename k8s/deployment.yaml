@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nimbusnotes
-          image: europe-west1-docker.pkg.dev/nimbusnotes-busra-2026/nimbusnotes-repo/nimbusnotes:v1
+          image: europe-west1-docker.pkg.dev/nimbusnotes-busra-2026/nimbusnotes-repo/nimbusnotes:v10
           ports:
             - containerPort: 8080
           volumeMounts:
