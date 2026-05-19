@@ -36,3 +36,4 @@ kubectl get pods
 kubectl get service
 kubectl rollout history deployment/nimbusnotes-deployment
 kubectl scale deployment nimbusnotes-deployment --replicas=1
+```
