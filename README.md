@@ -52,7 +52,9 @@ Projede CI/CD yapılandırması için `cloudbuild.yaml` kullanılmıştır.
 
 Cloud Build akışı:
 
-Kaynak kod → Cloud Build → Docker image build → Artifact Registry push → Kubernetes Deployment üzerinde yeni image kullanımı
+Kaynak kod → Cloud Build → Docker image build → Artifact Registry push
+
+Cloud Build ile uygulamanın Docker image'ı otomatik olarak oluşturulmuş ve Artifact Registry'ye gönderilmiştir. Kubernetes deployment güncellemesi ise `kubectl set image` komutu ile uygulanmıştır.
 
 ## 7. Deployment ve Service Kullanımı
 
@@ -72,7 +74,9 @@ Bu sayede:
 
 ## 9. NetworkPolicy Kullanımı
 
-Projede `network-policy.yaml` dosyası ile NetworkPolicy tanımlanmıştır. Bu dosya, uygulama pod’ları için ağ politikası oluşturur ve Kubernetes ağ güvenliği bileşeninin kullanımını gösterir.
+Projede `network-policy.yaml` dosyası ile NetworkPolicy tanımlanmıştır. Bu dosya, NimbusNotes podları için ingress ağ politikası oluşturur.
+
+Demo ortamında LoadBalancer üzerinden uygulamaya erişimin kesilmemesi için ingress trafiğine izin verilmiştir. Böylece NetworkPolicy bileşeninin Kubernetes ortamında nasıl tanımlandığı gösterilmiştir.
 
 ## 10. Rolling Update
 
@@ -133,3 +137,57 @@ Bu projede PVC `ReadWriteOnce` yapıda olduğu için kalıcı disk aynı anda bi
 ## 16. GitHub Repository
 
 `https://github.com/Busra1101/nimbusnotes`
+
+
+## 17. Kubernetes Test ve Kontrol Komutları
+
+### Pod, Service, PVC ve Deployment Kontrolü
+
+```bash
+kubectl get pods
+kubectl get svc
+kubectl get pvc
+kubectl get deployment
+```
+
+### Scaling Testi
+
+Deployment replica sayısı değiştirilerek scaling testi yapılmıştır.
+
+```bash
+kubectl scale deployment nimbusnotes-deployment --replicas=2
+kubectl get pods
+```
+
+PVC `ReadWriteOnce` kullandığı için final çalışan sürümde replica sayısı tekrar 1 yapılmıştır.
+
+```bash
+kubectl scale deployment nimbusnotes-deployment --replicas=1
+```
+
+### Rolling Update Testi
+
+Yeni image sürümü deployment üzerine uygulanmıştır.
+
+```bash
+kubectl set image deployment/nimbusnotes-deployment nimbusnotes=europe-west1-docker.pkg.dev/nimbusnotes-busra-2026/nimbusnotes-repo/nimbusnotes:v10
+kubectl rollout status deployment/nimbusnotes-deployment
+```
+
+### Rollback Testi
+
+Hatalı veya istenmeyen bir güncelleme durumunda önceki sürüme dönüş test edilmiştir.
+
+```bash
+kubectl rollout undo deployment/nimbusnotes-deployment
+kubectl rollout status deployment/nimbusnotes-deployment
+```
+
+### PVC Üzerindeki Notları Kontrol Etme
+
+Uygulamanın kullandığı gerçek veri dosyası pod içindeki `/data/notes.txt` yolundadır.
+
+```bash
+kubectl get pods
+kubectl exec -it POD_ADI -- cat /data/notes.txt
+```
