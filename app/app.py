@@ -221,7 +221,7 @@ def index():
     <body>
         <main class="shell">
             <section class="hero">
-                <div class="badge">Cloud Native Notes </div>
+                <div class="badge">Cloud Build Demo </div>
                 <h1>NimbusNotes</h1>
                 <p class="subtitle">
                     Notes carried by the cloud, kept beyond the rain.
